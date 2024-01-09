@@ -32,6 +32,6 @@ function createCard(element, deleteCard) {
   return cardElement;
 }
 
-function deleteCard(deletecard) {
-  deletecard.remove();
+function deleteCard(card) {
+  card.remove();
 }
