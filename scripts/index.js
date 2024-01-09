@@ -7,24 +7,31 @@
 // @todo: Функция удаления карточки
 
 // @todo: Вывести карточки на страницу
-const cardTemplate = document.querySelector('#card-template').content;
-const cardOnline = document.querySelector('.places__list');
+const cardTemplate = document.querySelector("#card-template").content;
+const cardsContainer = document.querySelector(".places__list");
 
-initialCards.forEach(function(element){
+initialCards.forEach(function (item) {
+  const card = createCard(item, deleteCard);
+  cardsContainer.append(card);
+});
 
-const cardElement = cardTemplate.querySelector('.places__item').cloneNode(true);
+function createCard(element, deleteCard) {
+  const cardElement = cardTemplate
+    .querySelector(".places__item")
+    .cloneNode(true);
 
-const garb = cardElement.querySelector('.card__delete-button');
+  const garb = cardElement.querySelector(".card__delete-button");
 
-cardElement.querySelector('.card__image').src = element.link;
-cardElement.querySelector('.card__title').textContent = element.name;
+  cardElement.querySelector(".card__image").src = element.link;
+  cardElement.querySelector(".card__image").alt = element.name;
+  cardElement.querySelector(".card__title").textContent = element.name;
 
-garb.addEventListener('click', function(){
-    cardElement.remove();
-})
+  garb.addEventListener("click", function () {
+    deleteCard(cardElement);
+  });
+  return cardElement;
+}
 
-cardOnline.append(cardElement); 
-})
-
-
-
+function deleteCard(deletecard) {
+  deletecard.remove();
+}
