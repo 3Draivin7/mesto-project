@@ -1,19 +1,27 @@
-export function createPopup(pop) {
+export function openPopup(pop) {
   pop.classList.add("popup_is-opened");
 }
 
-export function buttonClosePopup(pop) {
+export function closePopup(pop) {
   pop.classList.remove("popup_is-opened");
 }
 
-export function escClosePopup(pop, evt) {
+export function escClosePopup(evt) {
   if (evt.key == "Escape") {
-    pop.classList.remove("popup_is-opened");
+    const popupOpen = document.querySelector(".popup_is-opened");
+    closePopup(popupOpen);
   }
 }
 
-export function overlayClosePopup(pop, evt, i) {
-  if (!evt.composedPath().includes(div[i])) {
-    pop.classList.remove("popup_is-opened");
+export function overlayClosePopup(evt) {
+  const popupOpen = document.querySelector(".popup_is-opened");
+  const popupContent = popupOpen.querySelector(".popup__content");
+  const buttonClose = popupContent.querySelector(".popup__close");
+  console.log(evt.target, popupContent);
+  if (
+    !evt.composedPath().includes(popupContent) ||
+    evt.composedPath().includes(buttonClose)
+  ) {
+    closePopup(popupOpen);
   }
 }

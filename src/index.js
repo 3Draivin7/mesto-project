@@ -14,8 +14,8 @@ import "./pages/index.css"; // добавьте импорт главного ф
 import { initialCards } from "./scripts/cards";
 import { createCard, deleteCard, likeCard } from "./scripts/card";
 import {
-  createPopup,
-  buttonClosePopup,
+  openPopup,
+  closePopup,
   escClosePopup,
   overlayClosePopup,
 } from "./scripts/modal";
@@ -27,8 +27,8 @@ initialCards.forEach(function (item) {
 });
 
 function imgPopup(card) {
-  var popupTypeImg = document.querySelector(".popup_type_image");
-  popupTypeImg.classList.add("popup_is-opened");
+  const popupTypeImg = document.querySelector(".popup_type_image");
+  openPopup(popupTypeImg);
   popupTypeImg.querySelector(".popup__image").src =
     card.querySelector(".card__image").src;
   popupTypeImg.querySelector(".popup__image").alt =
@@ -39,81 +39,70 @@ function imgPopup(card) {
 
 ////////////////////////////////////////////
 
-const popup = document.querySelector(".profile__edit-button");
-const popupOpen = document.querySelector(".popup_type_edit");
-const popupClose = document.querySelectorAll(".popup__close");
-const div = document.querySelectorAll(".popup__content");
+const buttonProfileEdit = document.querySelector(".profile__edit-button");
+const popupTypeEdit = document.querySelector(".popup_type_edit");
+const popupCloses = document.querySelectorAll(".popup__close");
 const popups = document.querySelectorAll(".popup");
 const butonAdd = document.querySelector(".profile__add-button");
 const popupNew = document.querySelector(".popup_type_new-card");
-const bodyMain = document.querySelector(".page");
 const userName = document.querySelector(".popup__input_type_name");
 const userDescription = document.querySelector(
   ".popup__input_type_description"
 );
-const formElement = document.querySelector(".popup_type_edit");
+const formElementTypeEdit = document.querySelector(".popup_type_edit");
 userName.value = document.querySelector(".profile__title").textContent;
 userDescription.value = document.querySelector(
   ".profile__description"
 ).textContent;
-const imPopup = document.querySelector(".popup_type_image");
+const userProfileTitle = document.querySelector(".profile__title");
+const userProfileDescription = document.querySelector(".profile__description");
+/*const imgTypePopup = document.querySelector(".popup_type_image");*/
 const formCard = document.forms.newPlace;
 
-popup.addEventListener("click", () => createPopup(popupOpen));
+buttonProfileEdit.addEventListener("click", () => openPopup(popupTypeEdit));
 
-popups[0].addEventListener("click", (evt) =>
-  overlayClosePopup(popupOpen, evt, 0)
+popups.forEach(function (item) {
+  item.addEventListener("click", (evt) => overlayClosePopup(evt));
+});
+
+popupCloses.forEach(function (item) {
+  item.addEventListener("click", () => closePopup(item));
+});
+
+/*popups[0].addEventListener("click", (evt) =>
+overlayClosePopup(evt)
 );
-popupClose[0].addEventListener("click", () => buttonClosePopup(popupOpen));
-
-bodyMain.addEventListener("keydown", (evt) => escClosePopup(popupOpen, evt));
+popups[1].addEventListener("click", (evt) =>
+overlayClosePopup(evt)
+);
+popups[2].addEventListener("click", (evt) =>
+overlayClosePopup(evt)
+);
+*/
+window.addEventListener("keydown", (evt) => escClosePopup(evt));
 ////////////////////////////////
 
-butonAdd.addEventListener("click", () => createPopup(popupNew));
-
-bodyMain.addEventListener("keydown", (evt) => escClosePopup(popupNew, evt));
-
-popupClose[1].addEventListener("click", () => buttonClosePopup(popupNew));
-
-popups[1].addEventListener("click", (evt) =>
-  overlayClosePopup(popupNew, evt, 1)
-);
-///////////////////////
-
-bodyMain.addEventListener("keydown", (evt) => escClosePopup(imPopup, evt));
-
-popups[2].addEventListener("click", (evt) =>
-  overlayClosePopup(imPopup, evt, 2)
-);
-popupClose[2].addEventListener("click", () => buttonClosePopup(imPopup));
+butonAdd.addEventListener("click", () => openPopup(popupNew));
 
 ///////////////////
-function handleForSubmit(evt) {
+function handleForSubmitUserProfile(evt) {
   evt.preventDefault();
-  document.querySelector(".profile__title").textContent = userName.value;
-  document.querySelector(".profile__description").textContent =
-    userDescription.value;
-  popupOpen.classList.remove("popup_is-opened");
+  userProfileTitle.textContent = userName.value;
+  userProfileDescription.textContent = userDescription.value;
+  closePopup(popupTypeEdit);
 }
 
-formElement.addEventListener("submit", handleForSubmit);
+formElementTypeEdit.addEventListener("submit", handleForSubmitUserProfile);
 
-function cardForSubmit(evt) {
+function createNewCardSubmit(evt) {
   evt.preventDefault();
-  const cards = document.querySelectorAll(".card");
-  for (let i = 0; i < cards.length; i++) {
-    cards[i].remove();
-  }
+  popupNew.classList.remove("popup_is-opened");
   const cardName = formCard.elements.placeName.value;
   const pictureLink = formCard.elements.link.value;
   const b = { name: cardName, link: pictureLink };
-  initialCards.unshift(b);
+  const card = createCard(b, deleteCard, likeCard, imgPopup);
+  cardsContainer.prepend(card);
   formCard.reset();
-  popupNew.classList.remove("popup_is-opened");
-  initialCards.forEach(function (item) {
-    const card = createCard(item, deleteCard, likeCard, imgPopup);
-    cardsContainer.append(card);
-  });
 }
 
-formCard.addEventListener("submit", cardForSubmit);
+formCard.addEventListener("submit", createNewCardSubmit);
