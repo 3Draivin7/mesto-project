@@ -6,7 +6,7 @@
 
 // @todo: Функция удаления карточки
 
-// @todo: Вывести карточки на страницу
+// @todo: Вывести карточки на страницу imgPopup
 // index.js
 console.log(createCard, deleteCard, likeCard);
 
@@ -22,23 +22,19 @@ import {
 const cardsContainer = document.querySelector(".places__list");
 
 initialCards.forEach(function (item) {
-  const card = createCard(item, deleteCard, likeCard, imgPopup);
+  const card = createCard(item, deleteCard, likeCard, openImgPopup);
   cardsContainer.append(card);
 });
 
-function imgPopup(card) {
-  const popupTypeImg = document.querySelector(".popup_type_image");
+function openImgPopup(cardImageSrc, cardImageAlt, cardTitle) {
   openPopup(popupTypeImg);
-  popupTypeImg.querySelector(".popup__image").src =
-    card.querySelector(".card__image").src;
-  popupTypeImg.querySelector(".popup__image").alt =
-    card.querySelector(".card__image").alt;
-  popupTypeImg.querySelector(".popup__caption").textContent =
-    card.querySelector(".card__title").textContent;
+  popupTypeImg.querySelector(".popup__image").src = cardImageSrc;
+  popupTypeImg.querySelector(".popup__image").alt = cardImageAlt;
+  popupTypeImg.querySelector(".popup__caption").textContent = cardTitle;
 }
 
 ////////////////////////////////////////////
-
+const popupTypeImg = document.querySelector(".popup_type_image");
 const buttonProfileEdit = document.querySelector(".profile__edit-button");
 const popupTypeEdit = document.querySelector(".popup_type_edit");
 const popupCloses = document.querySelectorAll(".popup__close");
@@ -79,7 +75,7 @@ popups[2].addEventListener("click", (evt) =>
 overlayClosePopup(evt)
 );
 */
-window.addEventListener("keydown", (evt) => escClosePopup(evt));
+
 ////////////////////////////////
 
 butonAdd.addEventListener("click", () => openPopup(popupNew));
@@ -99,8 +95,8 @@ function createNewCardSubmit(evt) {
   popupNew.classList.remove("popup_is-opened");
   const cardName = formCard.elements.placeName.value;
   const pictureLink = formCard.elements.link.value;
-  const b = { name: cardName, link: pictureLink };
-  const card = createCard(b, deleteCard, likeCard, imgPopup);
+  const cardInformation = { name: cardName, link: pictureLink };
+  const card = createCard(cardInformation, deleteCard, likeCard, openImgPopup);
   cardsContainer.prepend(card);
   formCard.reset();
 }
