@@ -26,15 +26,18 @@ initialCards.forEach(function (item) {
   cardsContainer.append(card);
 });
 
-function openImgPopup(cardImageSrc, cardImageAlt, cardTitle) {
-  openPopup(popupTypeImg);
-  popupTypeImg.querySelector(".popup__image").src = cardImageSrc;
-  popupTypeImg.querySelector(".popup__image").alt = cardImageAlt;
-  popupTypeImg.querySelector(".popup__caption").textContent = cardTitle;
+function openImgPopup(cardImage, cardTitle) {
+  openPopup(popupTypeImage);
+  popupTypeImageSrc.src = cardImage.src;
+  popupTypeImageAlt.alt = cardImage.alt;
+  popupTypeImageText.textContent = cardTitle;
 }
 
 ////////////////////////////////////////////
-const popupTypeImg = document.querySelector(".popup_type_image");
+const popupTypeImage = document.querySelector(".popup_type_image");
+const popupTypeImageSrc = popupTypeImage.querySelector(".popup__image");
+const popupTypeImageAlt = popupTypeImage.querySelector(".popup__image");
+const popupTypeImageText = popupTypeImage.querySelector(".popup__caption");
 const buttonProfileEdit = document.querySelector(".profile__edit-button");
 const popupTypeEdit = document.querySelector(".popup_type_edit");
 const popupCloses = document.querySelectorAll(".popup__close");

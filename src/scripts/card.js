@@ -23,11 +23,7 @@ function createCard(element, deleteCard, likeCard, imgPopup) {
   });
 
   img.addEventListener("click", function () {
-    imgPopup(
-      cardElement.querySelector(".card__image").src,
-      cardElement.querySelector(".card__image").alt,
-      cardElement.querySelector(".card__title").textContent
-    );
+    imgPopup(img, imgTitle.textContent);
   });
 
   return cardElement;
