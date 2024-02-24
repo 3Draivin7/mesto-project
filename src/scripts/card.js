@@ -1,4 +1,5 @@
 /*import { initialCards } from "./cards";*/
+import { deleteApiCard, deleteApiLike, putApiLike } from "./api";
 length
 function createCard(element, deleteCard, likeCard, imgPopup) {
   const cardTemplate = document.querySelector("#card-template").content;
@@ -42,32 +43,17 @@ element.likes.forEach((res) => {
 }
 
 function deleteCard(card,element) {
-  fetch (`https://nomoreparties.co/v1/wff-cohort-6/cards/${element._id}`, {
-    method: 'DELETE',
-    headers: {
-      authorization: '7aea75e6-a33e-44c8-8785-1d85f354cab4'
-    }
-  });
+deleteApiCard(element);
   card.remove();
 }
-
 
 function likeCard(card, element) {
   const like = card.querySelector(".card__like-button");
   if (like.classList.contains('card__like-button_is-active')){
-  fetch (`https://nomoreparties.co/v1/wff-cohort-6/cards/likes/${element._id}`, {
-    method: 'DELETE',
-    headers: {
-      authorization: '7aea75e6-a33e-44c8-8785-1d85f354cab4'
-    }
-  })
+  deleteApiLike(element);
 } else{
-  fetch (`https://nomoreparties.co/v1/wff-cohort-6/cards/likes/${element._id}`, {
-    method: 'PUT',
-    headers: {
-      authorization: '7aea75e6-a33e-44c8-8785-1d85f354cab4'
-    }
-  })}
+  putApiLike(element);
+}
   like.classList.toggle("card__like-button_is-active");
 }
 

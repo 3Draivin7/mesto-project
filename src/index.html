@@ -38,9 +38,9 @@
       <button type="button" class="popup__close"></button>
       <h3 class="popup__title">Редактировать профиль</h3>
       <form class="popup__form" name="edit-profile">
-        <input  type="text" pattern="\D{2,40}" data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"  id="name-input" name="name" class="popup__input popup__input_type_name custom" placeholder="Имя" required>
+        <input  type="text" minlength="2" maxlength="40" pattern="\D+"  value="ss" data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"  id="name-input" name="name" class="popup__input popup__input_type_name custom" placeholder="Имя" required>
         <span class="name-input-error error-text"></span>
-        <input type="text" pattern="\D{2,200}" data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы" name="description" id="description-input" class="popup__input popup__input_type_description custom" placeholder="Занятие" required>
+        <input type="text" minlength="2" maxlength="200" pattern="\D+" value="ss" data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы" name="description" id="description-input" class="popup__input popup__input_type_description custom" placeholder="Занятие" required>
         <span class="description-input-error error-text"></span>
         <button type="submit" class="button popup__button">Сохранить</button>
       </form>
@@ -51,7 +51,7 @@
       <button type="button" class="popup__close"></button>
       <h3 class="popup__title">Новое место</h3>
       <form class="popup__form" name="newPlace">
-        <input type="text" id="card-name-input" pattern="\D{2,30}" data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы" name="placeName" class="popup__input popup__input_type_card-name custom" placeholder="Название" required>
+        <input type="text" id="card-name-input" minlength="2" maxlength="30" pattern="\D+" data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы" name="placeName" class="popup__input popup__input_type_card-name custom" placeholder="Название" required>
         <span class="card-name-input-error error-text"></span>
         <input type="url" name="link" id="link-input" class="popup__input popup__input_type_url" placeholder="Ссылка на картинку" required>
         <span class="link-input-error error-text"></span>
@@ -72,7 +72,7 @@
     <button type="button" class="popup__close"></button>
     <h3 class="popup__title">Обновить аватар</h3>
     <form class="popup__form" name="editAvatar">
-      <input type="text" name="avatar" id="link-input" class="popup__input popup__input_type_avatar" placeholder="Аватар" required>
+      <input type="url" name="avatar" id="link-input" class="popup__input popup__input_type_avatar" placeholder="Аватар" required>
       <span class="link-input-error error-text"></span>
       <button type="submit" class="button popup__button">Сохранить</button>
     </form>
