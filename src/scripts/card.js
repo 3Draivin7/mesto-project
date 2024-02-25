@@ -1,7 +1,5 @@
-/*import { initialCards } from "./cards";*/
-import { deleteApiCard, deleteApiLike, putApiLike } from "./api";
-length
-function createCard(element, deleteCard, likeCard, imgPopup) {
+
+function createCard(element, deleteCard, imgPopup, userId, handleLikeCard) {
   const cardTemplate = document.querySelector("#card-template").content;
   const cardElement = cardTemplate
     .querySelector(".places__item")
@@ -11,28 +9,27 @@ function createCard(element, deleteCard, likeCard, imgPopup) {
   const img = cardElement.querySelector(".card__image");
   const imgTitle = cardElement.querySelector(".card__title");
   const sumLike = cardElement.querySelector('.sum-likes');
-  sumLike.textContent = element.likes.length; 
-  if (element.owner._id != '0f0613de9a14448dd55de63f'){
+  sumLike.textContent = element.likes.length;
+  if (element.owner._id != userId) {
     garb.style.display = 'none';
   }
   const like = cardElement.querySelector(".card__like-button");
 
-element.likes.forEach((res) => {
-  if (res._id == '0f0613de9a14448dd55de63f'){
-    like.classList.add('card__like-button_is-active');
-  }
-});
+  element.likes.forEach((res) => {
+    if (res._id == userId) {
+      like.classList.add('card__like-button_is-active');
+    }
+  });
 
   img.src = element.link;
   img.alt = element.name;
   imgTitle.textContent = element.name;
 
   garb.addEventListener("click", function () {
-    deleteCard(cardElement,element);
+    deleteCard(cardElement, element);
   });
-
   likeButton.addEventListener("click", function () {
-    likeCard(cardElement, element);
+    handleLikeCard(checkStatusLike(like), cardElement, element);
   });
 
   img.addEventListener("click", function () {
@@ -41,20 +38,14 @@ element.likes.forEach((res) => {
 
   return cardElement;
 }
+/////////////////
 
-function deleteCard(card,element) {
-deleteApiCard(element);
-  card.remove();
-}
+function checkStatusLike(like) {
+  return (like.classList.contains('card__like-button_is-active'));
+};
 
-function likeCard(card, element) {
-  const like = card.querySelector(".card__like-button");
-  if (like.classList.contains('card__like-button_is-active')){
-  deleteApiLike(element);
-} else{
-  putApiLike(element);
-}
-  like.classList.toggle("card__like-button_is-active");
-}
 
-export { createCard, deleteCard, likeCard };
+///////////////////////
+
+
+export { createCard };

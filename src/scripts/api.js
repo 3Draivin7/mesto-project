@@ -24,19 +24,6 @@ return fetch(`${config.baseUrl}/users/me/avatar`, {
   });
 };
 
-export function getApiAvatar() {
- return fetch(`${config.baseUrl}/users/me`, {
-  method: 'GET',
-  headers: config.headers
-})
-.then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
-};
-
 export function getApiNameDescription() {
   return fetch(`${config.baseUrl}/users/me`, {
   method: 'GET',
@@ -124,7 +111,7 @@ export function deleteApiCard(element){
           });
     };
 export function putApiLike(element){
-          fetch (`${config.baseUrl}/cards/likes/${element._id}`, {
+         return fetch (`${config.baseUrl}/cards/likes/${element._id}`, {
             method: 'PUT',
             headers: config.headers
           })
