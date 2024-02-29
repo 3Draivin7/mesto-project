@@ -8,7 +8,7 @@
 
 // @todo: Вывести карточки на страницу imgPopup
 // index.js
-console.log(document.querySelector(".popup__input_type_name").value);
+
 import {
   getInitialCard,
   changeAvatarLinkFunction,
@@ -22,7 +22,7 @@ import {
 
 import "./pages/index.css";
 
-import { createCard } from "./scripts/card";
+import { createCard, deleteCard,changeLike } from "./scripts/card";
 import {
   openPopup,
   closePopup,
@@ -43,27 +43,60 @@ avatarChangeButton.addEventListener("click", () => {
 
 formAvatar.addEventListener("submit", (evt) => {
   evt.preventDefault();
+  popupNewAvatar.querySelector(".popup__button").textContent = "Cохранение...";
   const avatarLink = formAvatar.elements.avatar.value;
   changeAvatarLinkFunction(avatarLink)
     .then(() => {
       avatar.style.backgroundImage = `url(${avatarLink})`;
       closePopup(popupNewAvatar);
+      formAvatar.reset();
+      enableValidation(enableValidationconst.formSelector);
     })
     .catch((err) => {
       console.log(err);
       closePopup(popupNewAvatar);
-    });
+    })
+    .finally(() => {
+      popupNewAvatar.querySelector(".popup__button").textContent = "Cохранить";
+    })
 });
 
-var userId;
+let userId;
 
 Promise.all([getApiNameDescription, getInitialCard])
-  .then(() => console.log("ok"))
+  .then(() => {
+    getApiNameDescription()
+  .then((result) => {
+    userProfileTitle.textContent = result.name;
+    userProfileDescription.textContent = result.about;
+    userName.value = result.name;
+    userDescription.value = result.about;
+    avatar.style.backgroundImage = `url(${result.avatar})`;
+    userId = result._id;
+  })
+  .catch((err) => {
+    console.log(err);
+  })})
+  .then(() => {
+    getInitialCard()
+  .then((result) => {
+    result.forEach(function (item) {
+      const card = createCard(
+        item,
+        deleteCard,
+        openImgPopup,
+        userId,
+        handleLikeCard,
+        deleteApiCard
+      );
+      cardsContainer.append(card);
+    });
+  })})
   .catch((err) => {
     console.log(err);
   });
 
-getApiNameDescription()
+/*getApiNameDescription()
   .then((result) => {
     userProfileTitle.textContent = result.name;
     userProfileDescription.textContent = result.about;
@@ -84,7 +117,8 @@ getInitialCard()
         deleteCard,
         openImgPopup,
         userId,
-        handleLikeCard
+        handleLikeCard,
+        deleteApiCard
       );
       cardsContainer.append(card);
     });
@@ -92,7 +126,7 @@ getInitialCard()
   .catch((err) => {
     console.log(err);
   });
-
+*/
 const cardsContainer = document.querySelector(".places__list");
 
 function openImgPopup(cardImage, cardTitle) {
@@ -154,25 +188,30 @@ formElementTypeEdit.addEventListener("submit", handleForSubmitUserProfile);
 
 function createNewCardSubmit(evt) {
   evt.preventDefault();
-  popupNew.classList.remove("popup_is-opened");
+  popupNew.querySelector(".popup__button").textContent = "Cохранение...";
+  closePopup(popupNew);
   const cardName = formCard.elements.placeName.value;
   const pictureLink = formCard.elements.link.value;
   postNewCard(cardName, pictureLink)
     .then((data) => {
-      const cardInformation = { name: data.name, link: data.link };
       const card = createCard(
-        cardInformation,
+        data,
         deleteCard,
         openImgPopup,
         userId,
-        handleLikeCard
+        handleLikeCard,
+        deleteApiCard
       );
       cardsContainer.prepend(card);
     })
     .catch((err) => {
       console.log(err);
-    });
+    })
+    .finally(() => {
+      popupNew.querySelector(".popup__button").textContent = "Cохранить";
+    })
   formCard.reset();
+  enableValidation(enableValidationconst.formSelector);
 }
 
 function handleLikeCard(status, card, element) {
@@ -195,27 +234,7 @@ function handleLikeCard(status, card, element) {
   }
 }
 
-function deleteCard(card, element) {
-  deleteApiCard(element)
-    .then(() => {
-      card.remove();
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-}
 
-function changeLike(card, check) {
-  const like = card.querySelector(".card__like-button");
-  like.classList.toggle("card__like-button_is-active");
-  if (check) {
-    card.querySelector(".sum-likes").textContent =
-      Number(card.querySelector(".sum-likes").textContent) + 1;
-  } else {
-    card.querySelector(".sum-likes").textContent =
-      Number(card.querySelector(".sum-likes").textContent) - 1;
-  }
-}
 
 formCard.addEventListener("submit", createNewCardSubmit);
 
@@ -228,6 +247,6 @@ const enableValidationconst = {
   errorClass: "popup__error_visible",
 };
 
-console.log(enableValidation.formSelector);
+
 
 enableValidation(enableValidationconst.formSelector);
