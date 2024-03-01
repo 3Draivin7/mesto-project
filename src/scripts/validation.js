@@ -57,6 +57,7 @@ function toggleButtonState(inputList, buttonElement) {
 export function enableValidation(evt) {
   const formList = Array.from(document.querySelectorAll(evt));
   formList.forEach((formElement) => {
+    console.log(formElement);
     formElement.addEventListener('submit', (evt) => {
       evt.preventDefault();
     });
@@ -65,3 +66,10 @@ export function enableValidation(evt) {
 }
 
 
+export function resetForm(form) {
+  form.reset();
+}
+
+export function buttonInactive(button) {
+  button.classList.add('button_inactive');
+}

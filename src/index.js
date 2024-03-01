@@ -30,7 +30,7 @@ import {
   overlayClosePopup,
 } from "./scripts/modal";
 
-import { enableValidation } from "./scripts/validation";
+import { enableValidation, resetForm, buttonInactive } from "./scripts/validation";
 
 const avatar = document.querySelector(".profile__image");
 const avatarChangeButton = document.querySelector(".profile__image");
@@ -49,12 +49,11 @@ formAvatar.addEventListener("submit", (evt) => {
     .then(() => {
       avatar.style.backgroundImage = `url(${avatarLink})`;
       closePopup(popupNewAvatar);
-      formAvatar.reset();
-      enableValidation(enableValidationconst.formSelector);
+      resetForm(formAvatar);
+      buttonInactive(popupNewAvatar.querySelector(".popup__button"));
     })
     .catch((err) => {
       console.log(err);
-      closePopup(popupNewAvatar);
     })
     .finally(() => {
       popupNewAvatar.querySelector(".popup__button").textContent = "Cохранить";
@@ -63,24 +62,15 @@ formAvatar.addEventListener("submit", (evt) => {
 
 let userId;
 
-Promise.all([getApiNameDescription, getInitialCard])
-  .then(() => {
-    getApiNameDescription()
-  .then((result) => {
-    userProfileTitle.textContent = result.name;
-    userProfileDescription.textContent = result.about;
-    userName.value = result.name;
-    userDescription.value = result.about;
-    avatar.style.backgroundImage = `url(${result.avatar})`;
-    userId = result._id;
-  })
-  .catch((err) => {
-    console.log(err);
-  })})
-  .then(() => {
-    getInitialCard()
-  .then((result) => {
-    result.forEach(function (item) {
+Promise.all([getApiNameDescription(), getInitialCard()])
+.then(([user, cards]) => {
+    userProfileTitle.textContent = user.name;
+    userProfileDescription.textContent = user.about;
+    userName.value = user.name;
+    userDescription.value = user.about;
+    avatar.style.backgroundImage = `url(${user.avatar})`;
+    userId = user._id;
+    cards.forEach(function (item) {
       const card = createCard(
         item,
         deleteCard,
@@ -90,43 +80,11 @@ Promise.all([getApiNameDescription, getInitialCard])
         deleteApiCard
       );
       cardsContainer.append(card);
-    });
-  })})
+})})
   .catch((err) => {
     console.log(err);
   });
 
-/*getApiNameDescription()
-  .then((result) => {
-    userProfileTitle.textContent = result.name;
-    userProfileDescription.textContent = result.about;
-    userName.value = result.name;
-    userDescription.value = result.about;
-    avatar.style.backgroundImage = `url(${result.avatar})`;
-    userId = result._id;
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-
-getInitialCard()
-  .then((result) => {
-    result.forEach(function (item) {
-      const card = createCard(
-        item,
-        deleteCard,
-        openImgPopup,
-        userId,
-        handleLikeCard,
-        deleteApiCard
-      );
-      cardsContainer.append(card);
-    });
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-*/
 const cardsContainer = document.querySelector(".places__list");
 
 function openImgPopup(cardImage, cardTitle) {
@@ -175,6 +133,8 @@ function handleForSubmitUserProfile(evt) {
   popupTypeEdit.querySelector(".popup__button").textContent = "Cохранение...";
   patchNameDescription(userName, userDescription)
     .then(() => {
+      userProfileTitle.textContent = userName.value;
+      userProfileDescription.textContent = userDescription.value;
       closePopup(popupTypeEdit);
     })
     .catch((err) => {
@@ -189,11 +149,11 @@ formElementTypeEdit.addEventListener("submit", handleForSubmitUserProfile);
 function createNewCardSubmit(evt) {
   evt.preventDefault();
   popupNew.querySelector(".popup__button").textContent = "Cохранение...";
-  closePopup(popupNew);
   const cardName = formCard.elements.placeName.value;
   const pictureLink = formCard.elements.link.value;
   postNewCard(cardName, pictureLink)
     .then((data) => {
+      closePopup(popupNew);
       const card = createCard(
         data,
         deleteCard,
@@ -210,8 +170,8 @@ function createNewCardSubmit(evt) {
     .finally(() => {
       popupNew.querySelector(".popup__button").textContent = "Cохранить";
     })
-  formCard.reset();
-  enableValidation(enableValidationconst.formSelector);
+  resetForm(formCard);
+  buttonInactive(popupNew.querySelector(".popup__button"));
 }
 
 function handleLikeCard(status, card, element) {
