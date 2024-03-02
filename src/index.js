@@ -30,7 +30,7 @@ import {
   overlayClosePopup,
 } from "./scripts/modal";
 
-import { enableValidation, resetForm, buttonInactive } from "./scripts/validation";
+import { enableValidation, resetForm, deactivateButton } from "./scripts/validation";
 
 const avatar = document.querySelector(".profile__image");
 const avatarChangeButton = document.querySelector(".profile__image");
@@ -43,20 +43,21 @@ avatarChangeButton.addEventListener("click", () => {
 
 formAvatar.addEventListener("submit", (evt) => {
   evt.preventDefault();
-  popupNewAvatar.querySelector(".popup__button").textContent = "Cохранение...";
+  const popupButton = popupNewAvatar.querySelector(".popup__button");
+  popupButton.textContent = "Cохранение...";
   const avatarLink = formAvatar.elements.avatar.value;
   changeAvatarLinkFunction(avatarLink)
     .then(() => {
       avatar.style.backgroundImage = `url(${avatarLink})`;
       closePopup(popupNewAvatar);
       resetForm(formAvatar);
-      buttonInactive(popupNewAvatar.querySelector(".popup__button"));
+      deactivateButton(popupButton);
     })
     .catch((err) => {
       console.log(err);
     })
     .finally(() => {
-      popupNewAvatar.querySelector(".popup__button").textContent = "Cохранить";
+      popupButton.textContent = "Cохранить";
     })
 });
 
@@ -130,7 +131,8 @@ popupCloses.forEach(function (item) {
 butonAdd.addEventListener("click", () => openPopup(popupNew));
 function handleForSubmitUserProfile(evt) {
   evt.preventDefault();
-  popupTypeEdit.querySelector(".popup__button").textContent = "Cохранение...";
+  const popupButton = popupTypeEdit.querySelector(".popup__button");
+  popupButton.textContent = "Cохранение...";
   patchNameDescription(userName, userDescription)
     .then(() => {
       userProfileTitle.textContent = userName.value;
@@ -141,14 +143,15 @@ function handleForSubmitUserProfile(evt) {
       console.log(err);
     })
     .finally(() => {
-      popupTypeEdit.querySelector(".popup__button").textContent = "Cохранить";
+      popupButton.textContent = "Cохранить";
     });
 }
 formElementTypeEdit.addEventListener("submit", handleForSubmitUserProfile);
 
 function createNewCardSubmit(evt) {
   evt.preventDefault();
-  popupNew.querySelector(".popup__button").textContent = "Cохранение...";
+  const popupButton = popupNew.querySelector(".popup__button");
+  popupButton.textContent = "Cохранение...";
   const cardName = formCard.elements.placeName.value;
   const pictureLink = formCard.elements.link.value;
   postNewCard(cardName, pictureLink)
@@ -162,16 +165,16 @@ function createNewCardSubmit(evt) {
         handleLikeCard,
         deleteApiCard
       );
+      resetForm(formCard);
+      deactivateButton(popupButton);
       cardsContainer.prepend(card);
     })
     .catch((err) => {
       console.log(err);
     })
     .finally(() => {
-      popupNew.querySelector(".popup__button").textContent = "Cохранить";
+      popupButton.textContent = "Cохранить";
     })
-  resetForm(formCard);
-  buttonInactive(popupNew.querySelector(".popup__button"));
 }
 
 function handleLikeCard(status, card, element) {

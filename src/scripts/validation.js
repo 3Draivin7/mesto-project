@@ -70,6 +70,6 @@ export function resetForm(form) {
   form.reset();
 }
 
-export function buttonInactive(button) {
+export function deactivateButton(button) {
   button.classList.add('button_inactive');
 }
